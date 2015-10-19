@@ -345,14 +345,22 @@ uint8_t MPU6050::dmpInitialize() {
     setMemoryStartAddress(0x06);
     DEBUG_PRINTLN(F("Checking hardware revision..."));
     DEBUG_PRINT(F("Revision @ user[16][6] = "));
+#ifdef DEBUG
     DEBUG_PRINTLNF(readMemoryByte(), HEX);
+#else
+    readMemoryByte();
+#endif
     DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
     setMemoryBank(0, false, false);
 
     // check OTP bank valid
     DEBUG_PRINTLN(F("Reading OTP bank valid flag..."));
     DEBUG_PRINT(F("OTP bank is "));
+#ifdef DEBUG
     DEBUG_PRINTLN(getOTPBankValid() ? F("valid!") : F("invalid!"));
+#else
+    getOTPBankValid();
+#endif
 
     // get X/Y/Z gyro offsets
     DEBUG_PRINTLN(F("Reading gyro offset TC values..."));
@@ -494,7 +502,11 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Reading interrupt status..."));
 
             DEBUG_PRINT(F("Current interrupt status="));
+#ifdef DEBUG
             DEBUG_PRINTLNF(getIntStatus(), HEX);
+#else
+            getIntStatus(); // just clear interrupt flags
+#endif
 
             DEBUG_PRINTLN(F("Reading final memory update 6/7 (function unknown)..."));
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
@@ -512,7 +524,11 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Reading interrupt status..."));
 
             DEBUG_PRINT(F("Current interrupt status="));
+#ifdef DEBUG
             DEBUG_PRINTLNF(getIntStatus(), HEX);
+#else
+            getIntStatus(); // just clear interrupt flags
+#endif
 
             DEBUG_PRINTLN(F("Writing final memory update 7/7 (function unknown)..."));
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
